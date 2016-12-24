@@ -9,6 +9,7 @@ mkdir -p deb
 mkdir -p steam
 
 steampath="$HOME/.steam"
+steambase=$steampath
 steambin="$PWD/deb"
 steampathreturn="../.."
 
@@ -44,6 +45,7 @@ if [ -e $srcpath/.steam ]; then
   fi
 fi
 
+dpkg -x steam.2.deb deb
 dpkg -x steam.deb deb
 
 if ! [ -e .steam ]; then
@@ -87,3 +89,11 @@ set +e
 set -e
 
 fix_steam
+
+#. $steampathreturn/var.sh
+
+#set +e
+#. $steampathreturn/core.sh
+#set -e
+
+#fix_steam

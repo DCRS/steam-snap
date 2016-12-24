@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 # Touch our startup file so we can detect bootstrap launch failure
 if [ "$UNAME" = "Linux" ]; then

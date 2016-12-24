@@ -1,5 +1,5 @@
 steam:
-	if [ -z $(FORCE_X) ]; then xvfb-run bash scripts.sh; else bash script.sh; fi
+	if [ -z $(FORCE_X) ]; then xvfb-run bash script.sh; else bash script.sh; fi
 install:
 	mv deb $(DESTDIR)/deb
 	mv steam $(DESTDIR)/steam

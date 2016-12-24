@@ -1,4 +1,4 @@
-#!/usr/bin/env bash
+#!/bin/bash
 
 function show_message()
 {
@@ -189,7 +189,7 @@ function detect_bootstrap()
 	else
 		# This is the default bootstrap install location for the Ubuntu package.
 		# We use this as a fallback for people who have an existing installation and have never run the new install_bootstrap code in bin_steam.sh
-		echo "/usr/lib/`detect_package`/bootstraplinux_`detect_platform`.tar.xz"
+		echo "$steambin/usr/lib/`detect_package`/bootstraplinux_`detect_platform`.tar.xz"
 	fi
 }
 

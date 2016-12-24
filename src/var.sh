@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 set -o pipefail
 shopt -s failglob
@@ -19,7 +19,7 @@ ARCHIVE_EXT=tar.xz
 # directory lives - and all this in a subshell, so we don't affect
 # $PWD
 
-STEAMROOT="$(cd $steampath && echo $PWD)"
+STEAMROOT="$(cd $steambase && echo $PWD)"
 if [ -z ${STEAMROOT} ]; then
 	echo $"Couldn't find Steam root directory from "$0", aborting!"
 	exit 1
@@ -69,7 +69,7 @@ STEAMEXEPATH=$PLATFORM/$STEAMEXE
 # We use ~/.steam for bootstrap symlinks so that we can easily
 # tell partners where to go to find the Steam libraries and data.
 # This is constant so that legacy applications can always find us in the future.
-STEAMCONFIG=~/.steam
+STEAMCONFIG=$steampath
 PIDFILE="$STEAMCONFIG/steam.pid" # pid of running steam for this user
 STEAMBIN32LINK="$STEAMCONFIG/bin32"
 STEAMBIN64LINK="$STEAMCONFIG/bin64"
