@@ -15,21 +15,21 @@ grade: devel # must be 'stable' to release into candidate/stable channels
 confinement: devmode # use 'strict' once you have the right plugs and slots
 
 parts:
-#  python:
-#    source: empty
-#    organize:
-#      .placeholder: .python.placeholder
-#    plugin: python
-#    python-version: python2
   deps:
     source: empty
     plugin: dump
     stage-packages:
-      - zenity
-      - xterm
       - libstdc++6
       - lib32stdc++6
       - g++-multilib
+      #and the steam deps
+      - zenity
+      - xterm
+      - gnome-terminal
+      - xz-utils
+      - curl
+#      - libgl1-mesa-dri:i386
+#      - libgl1-mesa-glx:i386
   steam:
     build-packages:
       - xvfb
@@ -40,6 +40,5 @@ parts:
   launcher:
     after:
       - steam
-#      - python
     source: launcher
     plugin: dump
