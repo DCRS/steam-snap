@@ -105,13 +105,13 @@ if [ "$INITIAL_LAUNCH" ]; then
 		STEAMSCRIPT="$steambin/usr/bin/`detect_package`"
 	fi
 
-	# Install any additional dependencies
-	if [ -z "$STEAMOS" ]; then
-		STEAMDEPS="`dirname $STEAMSCRIPT`/`detect_package`deps"
-		if [ -f "$STEAMDEPS" -a -f "$STEAMROOT/steamdeps.txt" ]; then
-			"$STEAMDEPS" $STEAMROOT/steamdeps.txt
-		fi
-	fi
+	# Install any additional dependencies - won't work anyway
+#	if [ -z "$STEAMOS" ]; then
+#		STEAMDEPS="`dirname $STEAMSCRIPT`/`detect_package`deps"
+#		if [ -f "$STEAMDEPS" -a -f "$STEAMROOT/steamdeps.txt" ]; then
+#			"$STEAMDEPS" $STEAMROOT/steamdeps.txt
+#		fi
+#	fi
 
 	# Create symbolic links for the Steam API
 	if [ ! -e "$STEAMCONFIG" ]; then

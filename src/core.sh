@@ -14,6 +14,7 @@ echo "try_ $STEAMEXEPATH"
 # and launch steam
 STEAM_DEBUGGER=${DEBUGGER-}
 unset DEBUGGER # Don't use debugger if Steam launches itself recursively
+set +e #if steam exits with code 42 or similar
 if [ "$STEAM_DEBUGGER" == "gdb" ] || [ "$STEAM_DEBUGGER" == "cgdb" ]; then
 	ARGSFILE=$(mktemp $USER.steam.gdb.XXXX)
 
@@ -57,8 +58,4 @@ if [ "$UNAME" = "Linux" ]; then
 	fi
 fi
 
-# If steam requested to restart, then restart
-#if [ $STATUS -eq $MAGIC_RESTART_EXITCODE ] ; then
-#	echo "Restarting Steam by request..."
-#	exec "$0" "$@"
-#fi
+# If steam requested to restart, then restart - implented in the launcher.sh script

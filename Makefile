@@ -8,6 +8,7 @@ test-local:
 	snap install --force-dangerous --devmode *.snap
 	/snap/bin/steam
 iso-build:
+	snapcraft clean steam
 	rm -rf parts/steam/
 	mkdir -p parts/steam/install
 	mkdir -p parts/steam/state

@@ -25,8 +25,10 @@ waitloop() { #replace the steam.sh script with "exit 0" to prevent steam from la
         echo "exit 0" > $steampath/steam.sh
         touch $steampath/.applied
       fi
+      sleep .1s
+    else
+      sleep .5s
     fi
-    sleep .1s
     waitloop
   fi
 }
@@ -64,17 +66,17 @@ else
   mv $steampath/steam.orig.sh $steampath/steam.sh
 fi
 
+depspath=$(readlink -f ../../deps/install)
+
 fix_steam() {
-  #fix everything
-  #find -type f -iname "libstdc++.so.*" -delete -print #delete old libstd
-  rm -fv $steampath/ubuntu12_32/steam-runtime/i386/usr/lib/i386-linux-gnu/libstdc++.so.6
-  rm -fv $steampath/ubuntu12_32/steam-runtime/amd64/usr/lib/x86_64-linux-gnu/libstdc++.so.6
-  rm -fv $steampath/ubuntu12_32/steam-runtime/i386/usr/lib/i386-linux-gnu/libstdc++.so.6
-  rm -fv $steampath/ubuntu12_32/steam-runtime/i386/lib/i386-linux-gnu/libgcc_s.so.1
-  rm -fv $steampath/ubuntu12_32/steam-runtime/amd64/lib/x86_64-linux-gnu/libgcc_s.so.1
-  rm -fv $steampath/ubuntu12_32/steam-runtime/amd64/usr/lib/x86_64-linux-gnu/libstdc++.so.6
-  rm -fv $steampath/ubuntu12_32/steam-runtime/i386/usr/lib/i386-linux-gnu/libxcb.so.1
-  #find -type f -iname "libstdc++.so.*" -print -delete
+  #find -type f -iname "lib*.so.*" -print
+  #replace old libs with new ones and hope thinks won't break
+  cp $(readlink -f $depspath/usr/lib32/libstdc++.so.6) $steampath/ubuntu12_32/steam-runtime/i386/usr/lib/i386-linux-gnu/libstdc++.so.6
+  cp $(readlink -f $depspath/usr/lib/x86_64-linux-gnu/libstdc++.so.6) $steampath/ubuntu12_32/steam-runtime/amd64/usr/lib/x86_64-linux-gnu/libstdc++.so.6
+  #and update/replace those
+  #rm -fv $steampath/ubuntu12_32/steam-runtime/i386/lib/i386-linux-gnu/libgcc_s.so.1
+  #rm -fv $steampath/ubuntu12_32/steam-runtime/amd64/lib/x86_64-linux-gnu/libgcc_s.so.1
+  #rm -fv $steampath/ubuntu12_32/steam-runtime/i386/usr/lib/i386-linux-gnu/libxcb.so.1
 }
 
 cd $steampath
@@ -82,11 +84,11 @@ export USE_XVFB=true
 . $steampathreturn/fnc.sh
 . $steampathreturn/var.sh
 
+touch starting
+
 fix_steam
 
-set +e
 . $steampathreturn/core.sh
-set -e
 
 fix_steam
 
@@ -97,3 +99,8 @@ fix_steam
 #set -e
 
 #fix_steam
+
+for f in steam.pid bin32 bin64 root sdk32 sdk64 starting steam.pipe; do
+  rm -v $f
+done
+touch ssfn #fixes some errors

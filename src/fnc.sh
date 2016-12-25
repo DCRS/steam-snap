@@ -44,15 +44,19 @@ function show_license_agreement()
 			exit 1
 		fi
 
+		set +e
 		# See if they have been grandfathered in through the beta
 		SSAVersion=$(find -L "$STEAMCONFIG/`detect_package`" -name sharedconfig.vdf -exec fgrep SSAVersion {} \;)
+		set -e
 
 		if [ "$SSAVersion" != "" ]; then
 			answer=accepted
 		else
 			answer=declined
+			set +e
 			output=$(zenity --width 650 --height 500 --text-info --title=$"Steam Install Agreement" --filename="$LICENSE" --checkbox=$"I have read and accept these terms." 2>&1)
 			STATUS=$?
+			set -e
 			if echo $output | grep "status 1:" >/dev/null; then
 				# Zenity couldn't launch a window
 				STATUS=-1
@@ -195,6 +199,10 @@ function detect_bootstrap()
 
 function install_bootstrap()
 {
+	# Don't install if disabled
+	if ! [ -z "$disablebootstrapupdates" ]; then
+		return 0
+	fi
 	# Don't install bootstrap in development
 	if [ -f "$STEAMROOT/steam_dev.cfg" ]; then
 		return 1
