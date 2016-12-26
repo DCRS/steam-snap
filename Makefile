@@ -3,12 +3,12 @@ build:
 test-ci:
 	@echo "Soon..."
 test-local:
-	snapcraft clean steam launcher
+	snapcraft clean
 	FORCE_X=1 snapcraft
 	snap install --force-dangerous --devmode *.snap
 	/snap/bin/steam
 iso-build:
-	snapcraft clean steam launcher
+	snapcraft clean
 	rm -rf parts/steam/
 	mkdir -p parts/steam/install
 	mkdir -p parts/steam/state
@@ -19,7 +19,6 @@ iso-build:
 	make -C parts/steam/build FORCE_X=1 isobuild=1
 	make -C parts/steam/build install DESTDIR=$(PWD)/parts/steam/install
 iso-test: iso-build
-	cp -rvp launcher/launcher.sh $(PWD)/parts/steam/install
 	mkdir -p $(PWD)/parts/steam/x1
 	mkdir -p $(PWD)/parts/steam/common
 	@echo

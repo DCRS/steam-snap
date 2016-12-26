@@ -12,8 +12,9 @@ steampath="$HOME/.steam"
 steambase=$steampath
 steambin="$PWD/deb"
 steampathreturn="../.."
+STEAM_LD_PRELOAD=""
 
-srcpath="../../.." #parts/steam/build
+srcpath=$(readlink -f "../../..") #parts/steam/build
 
 waitloop() { #replace the steam.sh script with "exit 0" to prevent steam from launching
   if ps -p $steampid > /dev/null
@@ -33,16 +34,18 @@ waitloop() { #replace the steam.sh script with "exit 0" to prevent steam from la
   fi
 }
 
-if [ -e $srcpath/.steam ]; then
-  #after steam is once installed this script will copy it back everytime (this makes developing MUCH faster)
-  cp -rp $srcpath/.steam steam
-  touch .steam
-  if ! [ -e $steampath/.applied ]; then
-    if [ -e $steampath/steam.sh ]; then
-      echo "[override] Successfully replaced steam.sh"
-      mv $steampath/steam.sh $steampath/steam.orig.sh
-      echo "exit 0" > $steampath/steam.sh
-      touch $steampath/.applied
+if [ -e $srcpath/.cache_steam ]; then
+  if [ -e $srcpath/.steam ]; then
+    #after steam is once installed this script will copy it back everytime (this makes developing MUCH faster)
+    cp -rp $srcpath/.steam steam
+    touch .steam
+    if ! [ -e $steampath/.applied ]; then
+      if [ -e $steampath/steam.sh ]; then
+        echo "[override] Successfully replaced steam.sh"
+        mv $steampath/steam.sh $steampath/steam.orig.sh
+        echo "exit 0" > $steampath/steam.sh
+        touch $steampath/.applied
+      fi
     fi
   fi
 fi
@@ -59,14 +62,41 @@ if ! [ -e .steam ]; then
   rm -f $steampath/steam.sh $steampath/steam.pipe $steampath/.applied
   mv $steampath/steam.orig.sh $steampath/steam.sh
 
-  rm -rf $srcpath/.steam
-  cp -rvp $steampath $srcpath/.steam
+  if [ -e $srcpath/.cache_steam ]; then
+    cp -rp $steampath $srcpath/.steam
+  fi
 else
   rm -f $steampath/steam.sh $steampath/steam.pipe $steampath/.applied
   mv $steampath/steam.orig.sh $steampath/steam.sh
 fi
 
-depspath=$(readlink -f ../../deps/install)
+depspath=$(readlink -f ../install)
+maindir=$PWD
+
+runtime_overwrite() {
+  #this will create a ubuntu 16.04 steam runtime and override files (keep the old libs in place)
+  for a in i386 amd64; do
+    rt=$steampath/ubuntu12_32/steam-runtime/$a/
+    rtbase=$maindir/runtime_$a
+    if [ -e $srcpath/.cache_runtime ]; then
+      if [ -e $srcpath/.runtime_$a ]; then
+        cp -rp $srcpath/.runtime_$a $rtbase
+      fi
+    fi
+    if ! [ -e $rtbase ]; then
+      make -C $maindir/steam-runtime runtime-$a to=$rtbase
+    fi
+    if [ -e $srcpath/.cache_runtime ]; then
+      if ! [ -e $srcpath/.runtime_$a ]; then
+        cp -rp $rtbase $srcpath/.runtime_$a
+      fi
+    fi
+    cp -rp $rtbase/* $rt
+    for f in usr/share/doc usr/doc usr/share/man usr/share/man-db; do
+      rm -rf $rt/$f
+    done
+  done
+}
 
 fix_steam() {
   #find -type f -iname "lib*.so.*" -print
@@ -92,6 +122,8 @@ fix_steam
 
 fix_steam
 
+runtime_overwrite
+
 #. $steampathreturn/var.sh
 
 #set +e
@@ -100,7 +132,10 @@ fix_steam
 
 #fix_steam
 
-for f in steam.pid bin32 bin64 root sdk32 sdk64 starting steam.pipe; do
+for f in steam.pid bin32 bin64 root sdk32 sdk64 steam.pipe; do
   rm -v $f
 done
+rm -vf starting
+rm -v $maindir/steam/.steampid
+rm -v $maindir/steam/.steampath
 touch ssfn #fixes some errors

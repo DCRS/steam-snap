@@ -4,4 +4,6 @@ install:
 	mv deb $(DESTDIR)/deb
 	mv steam $(DESTDIR)/steam
 	mkdir -p $(DESTDIR)/sh
+	mv launcher.sh $(DESTDIR)
+	rm script.sh
 	mv *.sh $(DESTDIR)/sh

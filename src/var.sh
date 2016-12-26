@@ -42,6 +42,7 @@ cd "$STEAMROOT"
 # Save the system paths in case we need to restore them
 export SYSTEM_PATH="$PATH"
 export SYSTEM_LD_LIBRARY_PATH="${LD_LIBRARY_PATH-}"
+export SYSTEM_LD_PRELOAD="$LD_PRELOAD"
 
 ##FNC.SH
 

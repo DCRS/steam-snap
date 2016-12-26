@@ -8,13 +8,14 @@ fi
 MAGIC_RESTART_EXITCODE=42
 SEGV_EXITCODE=139
 
-echo "try $STEAMROOT"
-echo "try_ $STEAMEXEPATH"
+echo "steamroot: $STEAMROOT"
+echo "exepath: $STEAMEXEPATH"
 
 # and launch steam
 STEAM_DEBUGGER=${DEBUGGER-}
 unset DEBUGGER # Don't use debugger if Steam launches itself recursively
 set +e #if steam exits with code 42 or similar
+export LD_PRELOAD="$STEAM_LD_PRELOAD:$LD_PRELOAD"
 if [ "$STEAM_DEBUGGER" == "gdb" ] || [ "$STEAM_DEBUGGER" == "cgdb" ]; then
 	ARGSFILE=$(mktemp $USER.steam.gdb.XXXX)
 
@@ -43,6 +44,7 @@ STATUS=$?
 # Restore paths before unpacking the bootstrap if we need to.
 export PATH="$SYSTEM_PATH"
 export LD_LIBRARY_PATH="$SYSTEM_LD_LIBRARY_PATH"
+export LD_PRELOAD="$SYSTEM_LD_PRELOAD"
 
 if [ "$UNAME" = "Linux" ]; then
 	if [ "$INITIAL_LAUNCH" -a \

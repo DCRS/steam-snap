@@ -21,3 +21,24 @@ for f in $files; do #link every file from $steamsource
   fi
 done
 rm -f $steampath/steam.pid #this ensures steam will update the symbolic links
+
+#LD_LIBRARY_PATH
+
+_chld() {
+  #replace $2 with $3 on $1 and add to LD_LIBRARY_PATH if exists (fixes 32bit lib missing on 64bit os bugs)
+  local n=${1//"$2"/"$3"}
+  if [ -e $n ]; then
+    LD="$LD_LIBRARY_PATH:$n"
+  fi
+}
+for l in ${LD//":"/" "}; do #for all libs
+  if echo "$l" | grep "^/snap/steam/" > /dev/null; then #if inside steam snap
+    if [ -e "$l" ]; then #and exists (fails for a path with spaces)
+      echo "for $l"
+      _chld "$l" lib lib32
+      _chld "$l" x86_64 i386
+    fi
+  fi
+done
+
+export STEAM_LD_PRELOAD="$LD_PRELOAD:$steamruntime32/usr/lib/i386-linux-gnu/dri/swrast_dri.so"

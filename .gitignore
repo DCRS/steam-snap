@@ -6,3 +6,8 @@ stage
 .steam
 _OLD
 deploy.sh
+src/steam-runtime/aptroot
+src/steam-runtime/deb
+src/steam-runtime/runtime
+.cache_*
+.runtime_*
