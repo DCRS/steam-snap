@@ -27,6 +27,8 @@ xdg-utils	xdg-utils
 # Steam (we'll just throw this in $steampath/ubuntu12_32/$arch/)
 #
 steam libgl1-mesa-dri libgl1-mesa-glx libc6
+#other libs we need
+steam libjson-c2 
 
 #
 # The complete package list

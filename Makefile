@@ -2,13 +2,13 @@ build:
 	snapcraft
 test-ci:
 	@echo "Soon..."
-test-local:
-	snapcraft clean
+clean:
+	rm -rf parts/ prime/ stage/
+test-local: clean
 	FORCE_X=1 snapcraft
 	snap install --force-dangerous --devmode *.snap
 	/snap/bin/steam
-iso-build:
-	snapcraft clean
+iso-build: clean
 	rm -rf parts/steam/
 	mkdir -p parts/steam/install
 	mkdir -p parts/steam/state

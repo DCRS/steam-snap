@@ -28,10 +28,15 @@ _chld() {
   #replace $2 with $3 on $1 and add to LD_LIBRARY_PATH if exists (fixes 32bit lib missing on 64bit os bugs)
   local n=${1//"$2"/"$3"}
   if [ -e $n ]; then
-    LD="$LD_LIBRARY_PATH:$n"
+    LD_LIBRARY_PATH="$LD_LIBRARY_PATH:$n"
+  fi
+  local n=${n/"$SNAP"/"$steamruntime32"}
+  if [ -e $n ]; then
+    LD_LIBRARY_PATH="$LD_LIBRARY_PATH:$n"
   fi
 }
-for l in ${LD//":"/" "}; do #for all libs
+
+for l in ${LD_LIBRARY_PATH//":"/" "}; do #for all libs
   if echo "$l" | grep "^/snap/steam/" > /dev/null; then #if inside steam snap
     if [ -e "$l" ]; then #and exists (fails for a path with spaces)
       echo "for $l"
@@ -40,5 +45,7 @@ for l in ${LD//":"/" "}; do #for all libs
     fi
   fi
 done
+
+LD_LIBRARY_PATH="$LD_LIBRARY_PATH:$SNAP/steam/.steam/ubuntu12_32"
 
 export STEAM_LD_PRELOAD="$LD_PRELOAD:$steamruntime32/usr/lib/i386-linux-gnu/dri/swrast_dri.so"

@@ -16,8 +16,8 @@ steambin="$SNAP/deb"
 steamsource="$SNAP/steam/.steam"
 steampath="$HOME/.steam"
 steambase="$HOME/.steam"
-steamruntime32="$steamsource/ubuntu12_32/steam-runtime/i386/"
-steamruntime64="$steamsource/ubuntu12_32/steam-runtime/amd64/"
+steamruntime32="$steamsource/ubuntu12_32/steam-runtime/i386"
+steamruntime64="$steamsource/ubuntu12_32/steam-runtime/amd64"
 disablebootstrapupdates=true #really long and anjoying string, isn't it?
 
 env

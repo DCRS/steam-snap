@@ -50,8 +50,8 @@ if [ -e $srcpath/.cache_steam ]; then
   fi
 fi
 
-dpkg -x steam.2.deb deb
-dpkg -x steam.deb deb
+dpkg -x steam.valve.deb deb
+dpkg -x steam.ubuntu_xenial.deb deb
 
 if ! [ -e .steam ]; then
   bash deb/usr/games/steam&steampid=$!
@@ -71,12 +71,15 @@ else
 fi
 
 depspath=$(readlink -f ../install)
+#export LD_PRELOAD="$depspath/usr/lib/x86_64-linux-gnu/libstdc++.so.6"
+LD_PRELOAD=''
+STEAM_LD_PRELOAD='/usr/$LIB/libstdc++.so.6 /usr/$LIB/libgcc_s.so.1 /usr/$LIB/libxcb.so.1 /usr/$LIB/libgpg-error.so'
 maindir=$PWD
 
 runtime_overwrite() {
   #this will create a ubuntu 16.04 steam runtime and override files (keep the old libs in place)
   for a in i386 amd64; do
-    rt=$steampath/ubuntu12_32/steam-runtime/$a/
+    rt=$steampath/ubuntu12_32/steam-runtime/$a
     rtbase=$maindir/runtime_$a
     if [ -e $srcpath/.cache_runtime ]; then
       if [ -e $srcpath/.runtime_$a ]; then
