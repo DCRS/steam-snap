@@ -54,7 +54,11 @@ dpkg -x steam.valve.deb deb
 dpkg -x steam.ubuntu_xenial.deb deb
 
 if ! [ -e .steam ]; then
-  bash deb/usr/games/steam&steampid=$!
+  export debpath=$PWD/deb
+  rm deb/usr/games/steam
+  mv steam.sh deb/usr/games/steam
+  chmod +x deb/usr/games/steam
+  bash -x deb/usr/games/steam&steampid=$!
   set +x
   waitloop
   set -x

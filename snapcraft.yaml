@@ -9,6 +9,8 @@ description: |
 
 apps:
   steam:
+    plugs:
+      - opengl
     command: launcher.sh
 
 grade: devel # must be 'stable' to release into candidate/stable channels
